@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
 import 'package:task_manager/ui/widgets/screen_background.dart';
 
@@ -101,13 +103,8 @@ Navigator.pop(context);
           enableActiveFill: true,
           onCompleted: (v) {
             print("Completed");
-          },
-          onChanged: (value) {
-            print(value);
-            setState(() {
-              currentText = value;
-            });
-          },
+          }, appContext: context,
+          
         ),
         const SizedBox(
           height: 8,
