@@ -99,8 +99,6 @@ Navigator.pop(context);
           animationDuration: Duration(milliseconds: 300),
           backgroundColor: Colors.blue.shade50,
           enableActiveFill: true,
-          errorAnimationController: errorController,
-          controller: textEditingController,
           onCompleted: (v) {
             print("Completed");
           },
