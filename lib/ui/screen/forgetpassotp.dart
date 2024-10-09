@@ -2,6 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:task_manager/ui/screen/resetpasswordscreeen.dart';
+import 'package:task_manager/ui/screen/sing_in_screen.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
 import 'package:task_manager/ui/widgets/screen_background.dart';
 
@@ -60,10 +62,10 @@ class _singinscreenState extends State<forgetpassotp> {
     );
   }
 void _ontapnextbutton(){
-
+Navigator.push(context, MaterialPageRoute(builder: (context)=>resetpasswordscreeen(),),);
 }
 void _ontapsingup(){
-Navigator.pop(context);
+Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder:(context) => const singinscreen()),(_) =>false, );
 }
 
   Widget _buildhaveaccountpsection() {
@@ -91,15 +93,19 @@ Navigator.pop(context);
           length: 6,
           obscureText: false,
           animationType: AnimationType.fade,
+          keyboardType: TextInputType.number,
           pinTheme: PinTheme(
             shape: PinCodeFieldShape.box,
             borderRadius: BorderRadius.circular(5),
             fieldHeight: 50,
             fieldWidth: 40,
             activeFillColor: Colors.white,
+            inactiveFillColor: Colors.white,
+            selectedFillColor: Colors.white
           ),
           animationDuration: Duration(milliseconds: 300),
-          backgroundColor: Colors.blue.shade50,
+          backgroundColor: Colors.transparent,
+
           enableActiveFill: true,
           onCompleted: (v) {
             print("Completed");

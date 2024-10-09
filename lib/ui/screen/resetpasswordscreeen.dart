@@ -1,19 +1,17 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager/ui/screen/emailvarification.dart';
-import 'package:task_manager/ui/screen/main_bottom_nav_bar_screeen.dart';
-import 'package:task_manager/ui/screen/singupsreen.dart';
+import 'package:task_manager/ui/screen/forgetpassotp.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
 import 'package:task_manager/ui/widgets/screen_background.dart';
 
-class singinscreen extends StatefulWidget {
-  const singinscreen({super.key});
+class resetpasswordscreeen extends StatefulWidget {
+  const resetpasswordscreeen({super.key});
 
   @override
-  State<singinscreen> createState() => _singinscreenState();
+  State<resetpasswordscreeen> createState() => _singinscreenState();
 }
 
-class _singinscreenState extends State<singinscreen> {
+class _singinscreenState extends State<resetpasswordscreeen> {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -28,14 +26,20 @@ class _singinscreenState extends State<singinscreen> {
                 height: 82,
               ),
               Text(
-                'Get started With',
+                'Set Password',
                 style: textTheme.displaySmall
                     ?.copyWith(fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 24,),
+              Text(
+                'Minimum number of password should be 8 letters',
+                style: textTheme.titleSmall
+                    ?.copyWith(color: Colors.grey),
               ),
               const SizedBox(
                 height: 24,
               ),
-              _buildsinginform(),
+              _buildsingupform(),
               const SizedBox(
                 height: 24,
               ),
@@ -45,14 +49,7 @@ class _singinscreenState extends State<singinscreen> {
                   const SizedBox(
                     height: 24,
                   ),
-                  TextButton(
-                    onPressed:_ontapforgetpasswordbotton,
-                    child: Text(
-                      'Forget Password',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                  _buldsingupsection(),
+                  _buildhaveaccountpsection(),
                 ],
               ),
             ],
@@ -61,21 +58,14 @@ class _singinscreenState extends State<singinscreen> {
       )),
     );
   }
-void _ontapforgetpasswordbotton(){
-Navigator.push(context, MaterialPageRoute(builder: (context)=> const emailvarification(), ),
-);
-}
 void _ontapnextbutton(){
-  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> mainbottomNavBarScrreen()), (value)=>false );
+Navigator.push(context, MaterialPageRoute(builder: (context) => const forgetpassotp(),),);
 }
 void _ontapsingup(){
-Navigator.push(context, MaterialPageRoute(
-    builder: (context) => const singupscreen(),
-  )
-  );
+Navigator.pop(context);
 }
 
-  Widget _buldsingupsection() {
+  Widget _buildhaveaccountpsection() {
     return RichText(
       text: TextSpan(
           style: TextStyle(
@@ -83,7 +73,7 @@ Navigator.push(context, MaterialPageRoute(
               fontWeight: FontWeight.w600,
               fontSize: 16,
               letterSpacing: 0.5),
-          text: "Don't have an accoutn?",
+          text: "Have accoutn?",
           children: [
             TextSpan(
                 text: 'Sing Up', style: TextStyle(color: Appcolors.themecolor),
@@ -93,7 +83,7 @@ Navigator.push(context, MaterialPageRoute(
     );
   }
 
-  Widget _buildsinginform() {
+  Widget _buildsingupform() {
     return Column(
       children: [
         TextFormField(
@@ -102,13 +92,6 @@ Navigator.push(context, MaterialPageRoute(
         ),
         const SizedBox(
           height: 8,
-        ),
-        TextFormField(
-          obscureText: true,
-          decoration: InputDecoration(hintText: 'Password'),
-        ),
-        const SizedBox(
-          height: 24,
         ),
         ElevatedButton(
             onPressed: _ontapnextbutton, child: Icon(Icons.arrow_circle_right_outlined)),
