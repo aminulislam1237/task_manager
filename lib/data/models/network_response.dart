@@ -4,6 +4,7 @@ class networkResponse{
   dynamic responseDate;
   String errormassage;
 
-  networkResponse(required .this.isSuccess, this.statuscode);
+  networkResponse({required this.isSuccess, required this.statuscode,this.responseDate,this.errormassage='something went worng'});
+
 
 }
