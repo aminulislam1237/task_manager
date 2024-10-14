@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:task_manager/ui/controllers/auth_controller.dart';
+import 'package:task_manager/ui/screen/main_bottom_nav_bar_screeen.dart';
 import 'package:task_manager/ui/screen/sing_in_screen.dart';
 import 'package:task_manager/ui/widgets/screen_background.dart';
 
@@ -15,13 +17,25 @@ class _splashscreenState extends State<splashscreen> {
 
   Future<void> _movetonextscreen() async {
     Future.delayed(const Duration(seconds: 2)).then((value) async {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const singinscreen(),
-        ),
-      );
-    });
+      await Authcontroller.getAccessToken();
+      if(Authcontroller.isLoggedIn()) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const mainbottomNavBarScrreen(),
+          ),
+        );
+      }else{
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const singinscreen(),
+          ),
+        );
+      }
+    }
+    );
+
   }
 
   @override

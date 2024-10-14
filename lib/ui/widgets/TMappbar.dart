@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/ui/controllers/auth_controller.dart';
 import 'package:task_manager/ui/screen/profile_screen.dart';
 import 'package:task_manager/ui/screen/sing_in_screen.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
@@ -53,7 +54,8 @@ class TMappbar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             IconButton(
-                onPressed: () {
+                onPressed: () async{
+                   await Authcontroller.clearUserData();
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => singinscreen()),

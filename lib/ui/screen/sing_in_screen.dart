@@ -1,5 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/models/network_response.dart';
+import 'package:task_manager/data/service/network_caller.dart';
+import 'package:task_manager/data/utils/urls.dart';
+import 'package:task_manager/ui/controllers/auth_controller.dart';
 import 'package:task_manager/ui/screen/emailvarification.dart';
 import 'package:task_manager/ui/screen/main_bottom_nav_bar_screeen.dart';
 import 'package:task_manager/ui/screen/singupsreen.dart';
@@ -14,6 +18,11 @@ class singinscreen extends StatefulWidget {
 }
 
 class _singinscreenState extends State<singinscreen> {
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final TextEditingController _emailLTEController = TextEditingController();
+  final TextEditingController _passwordLTEController = TextEditingController();
+  bool _inprogress =false;
+
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -66,8 +75,29 @@ Navigator.push(context, MaterialPageRoute(builder: (context)=> const emailvarifi
 );
 }
 void _ontapnextbutton(){
-  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> mainbottomNavBarScrreen()), (value)=>false );
+    if (!_formkey.currentState!.validate()){
+      return;
+    }
+   _singIn();
 }
+Future<void>_singIn() async{
+    _inprogress =true;
+    setState(() {});
+    Map<String,dynamic>requestBody ={
+      'email':_emailLTEController.text.trim(),
+      'password':_passwordLTEController.text,
+    };
+    final networkResponse response =await networkcaller.postRequest(url: urls.login,body: requestBody);
+    _inprogress=false;
+    if(response.isSuccess){
+      await Authcontroller.saveAccessToken(response.responseDate['token']);
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> mainbottomNavBarScrreen()), (value)=>false );
+    }else {
+      Error;
+    }
+}
+
+
 void _ontapsingup(){
 Navigator.push(context, MaterialPageRoute(
     builder: (context) => const singupscreen(),
@@ -94,25 +124,50 @@ Navigator.push(context, MaterialPageRoute(
   }
 
   Widget _buildsinginform() {
-    return Column(
-      children: [
-        TextFormField(
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(hintText: 'Email'),
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        TextFormField(
-          obscureText: true,
-          decoration: InputDecoration(hintText: 'Password'),
-        ),
-        const SizedBox(
-          height: 24,
-        ),
-        ElevatedButton(
-            onPressed: _ontapnextbutton, child: Icon(Icons.arrow_circle_right_outlined)),
-      ],
+    return Form(
+      key: _formkey,
+      child: Column(
+        children: [
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            controller: _emailLTEController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(hintText: 'Email'),
+            validator: (String? value){
+              if(value?.isEmpty?? true){
+                return'Enter a valid Email';
+              }
+              return null;
+            }
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          TextFormField(
+            controller: _passwordLTEController,
+            obscureText: true,
+            decoration: InputDecoration(hintText: 'Password'),
+              validator: (String? value){
+                if(value?.isEmpty?? true){
+                  return'Enter a your password ';
+                }
+                if(value!.length<=6){
+                  return 'Enter a password more than 6 charter';
+                }
+                return null;
+              }
+          ),
+          const SizedBox(
+            height: 24,
+          ),
+          Visibility(
+            visible: !_inprogress,
+            replacement: const CircularProgressIndicator(),
+            child: ElevatedButton(
+                onPressed: _ontapnextbutton, child: Icon(Icons.arrow_circle_right_outlined)),
+          ),
+        ],
+      ),
     );
   }
 }

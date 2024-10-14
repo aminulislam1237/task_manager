@@ -5,7 +5,7 @@ import 'package:http/http.dart';
 import 'package:task_manager/data/models/network_response.dart';
 
 class networkcaller {
-  static Future<networkResponse> getRequest(String url) async {
+  static Future<networkResponse> getRequest({required String url}) async {
     try {
       Uri uri = Uri.parse(url);
       debugPrint(url);
@@ -13,6 +13,16 @@ class networkcaller {
       printResponse(url, response);
       if (response.statusCode == 200) {
         final decodeData = jsonDecode(response.body);
+
+        if (decodeData['status'] == 'fail') {
+          return networkResponse(
+            isSuccess: false,
+            statuscode: response.statusCode,
+            responseDate: decodeData,
+            errormassage: decodeData['data'],
+          );
+        }
+
         return networkResponse(
             isSuccess: true,
             statuscode: response.statusCode,
@@ -31,14 +41,14 @@ class networkcaller {
       );
     }
   }
-  static Future<networkResponse>postRequest(String url, Map<String, dynamic>?body) async {
+
+  static Future<networkResponse> postRequest(
+      {required String url, Map<String, dynamic>? body}) async {
     try {
       Uri uri = Uri.parse(url);
       debugPrint(url);
       final Response response = await post(uri,
-          headers: {
-        'Content-Type': 'application/json'
-          },
+          headers: {'Content-Type': 'application/json'},
           body: jsonEncode(body));
       printResponse(url, response);
       if (response.statusCode == 200) {
