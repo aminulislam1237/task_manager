@@ -5,6 +5,9 @@ import 'package:task_manager/ui/utils/app_colors.dart';
 class taskmanager extends StatefulWidget {
   const taskmanager({super.key});
 
+  static GlobalKey<NavigatorState> navigatorkey = GlobalKey<NavigatorState>();
+
+
   @override
   State<taskmanager> createState() => _taskmanagerState();
 }
@@ -13,6 +16,7 @@ class _taskmanagerState extends State<taskmanager> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: taskmanager.navigatorkey,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorSchemeSeed: Appcolors.themecolor,
