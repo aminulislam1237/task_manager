@@ -13,13 +13,11 @@ class networkcaller {
       {required String url, Map<String, dynamic>? body}) async {
     try {
       Uri uri = Uri.parse(url);
-      // Change headers to Map<String, String>
       Map<String, String> headers = {
-        'Content-Type': 'application/json',
         'token': Authcontroller.accessToken.toString()
       };
       debugPrint(url);
-      printRequest(url, body, headers);
+      printRequest(url, null, headers);
 
       final Response response =
           await post(uri, headers: headers, body: jsonEncode(body));

@@ -16,68 +16,78 @@ final TextEditingController _titleTEController = TextEditingController();
 final TextEditingController _descriptionTEController = TextEditingController();
 final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 bool _addNewtaskInProgress = false;
+bool _shouldRefreshPrevious = false;
 
 class _addnewtaskState extends State<addnewtask> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const TMappbar(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _formkey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 42,
-              ),
-              const Text(
-                'Add new Task',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+    return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop,result){
+          if(didPop){
+            return;
+          }
+          Navigator.pop(context,_shouldRefreshPrevious);
+        },
+      child: Scaffold(
+        appBar: const TMappbar(),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Form(
+            key: _formkey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 42,
                 ),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              TextFormField(
-                controller: _titleTEController,
-                decoration: const InputDecoration(hintText: 'Title'),
-                validator: (String? value) {
-                  if (value?.trim().isEmpty ?? true) {
-                    return 'Enter a value';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              TextFormField(
-                controller: _descriptionTEController,
-                maxLines: 5,
-                decoration: const InputDecoration(
-                  hintText: 'Description',
+                const Text(
+                  'Add new Task',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                validator: (String? value) {
-                  if (value?.trim().isEmpty ?? true) {
-                    return 'Enter a value';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Visibility(
-                  visible: !_addNewtaskInProgress,
-                  replacement: const CircularProgressIndicator(),
-                  child: ElevatedButton(
-                      onPressed: _ontapsubmitbutton,
-                      child: const Icon(Icons.arrow_circle_right_outlined)))
-            ],
+                const SizedBox(
+                  height: 24,
+                ),
+                TextFormField(
+                  controller: _titleTEController,
+                  decoration: const InputDecoration(hintText: 'Title'),
+                  validator: (String? value) {
+                    if (value?.trim().isEmpty ?? true) {
+                      return 'Enter a value';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                TextFormField(
+                  controller: _descriptionTEController,
+                  maxLines: 5,
+                  decoration: const InputDecoration(
+                    hintText: 'Description',
+                  ),
+                  validator: (String? value) {
+                    if (value?.trim().isEmpty ?? true) {
+                      return 'Enter a value';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Visibility(
+                    visible: !_addNewtaskInProgress,
+                    replacement: const CircularProgressIndicator(),
+                    child: ElevatedButton(
+                        onPressed: _ontapsubmitbutton,
+                        child: const Icon(Icons.arrow_circle_right_outlined)))
+              ],
+            ),
           ),
         ),
       ),
@@ -103,6 +113,7 @@ class _addnewtaskState extends State<addnewtask> {
     _addNewtaskInProgress = false;
     setState(() {});
     if (response.isSuccess) {
+      _shouldRefreshPrevious =true;
       _clearTextFilds();
       showsnackBarMessage(context, 'New task added');
     } else {
