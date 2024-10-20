@@ -4,5 +4,7 @@ class urls{
   static const String login = '$_baseurl/login';
   static const String addnewtask = '$_baseurl/createTask';
   static const String newtasklist = '$_baseurl/listTaskByStatus/New';
-
+  static const String completedtasklist = '$_baseurl/listTaskByStatus/Completed';
+  static const String cancelledtasklist = '$_baseurl/listTaskByStatus/Cancelled';
+  static const String progresstasklist = '$_baseurl/listTaskByStatus/Progress';
 }

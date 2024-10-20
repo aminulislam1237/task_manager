@@ -5,9 +5,7 @@ import 'package:task_manager/data/models/task_list_model.dart';
 import 'package:task_manager/data/models/task_model.dart';
 import 'package:task_manager/data/service/network_caller.dart';
 import 'package:task_manager/data/utils/urls.dart';
-import 'package:task_manager/ui/screen/New_task_screen.dart';
 import 'package:task_manager/ui/screen/add_new_task.dart';
-import 'package:task_manager/ui/utils/app_colors.dart';
 import 'package:task_manager/ui/utils/showsnackbarmessage.dart';
 import 'package:task_manager/ui/widgets/Task_sammary_card.dart';
 import 'package:task_manager/ui/widgets/task_card.dart';
@@ -23,12 +21,12 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   bool _getNewTasklistInProgress = false;
   List<TaskModel> _newTasklist =[];
 
+
+  @override
 void initState(){
   super.initState();
   _getnewTasklist();
 }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

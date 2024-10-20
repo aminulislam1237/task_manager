@@ -20,7 +20,7 @@ class networkcaller {
       printRequest(url, null, headers);
 
       final Response response =
-          await post(uri, headers: headers, body: jsonEncode(body));
+          await get(uri, headers: headers,);
 
       printResponse(url, response);
 
