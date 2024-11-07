@@ -13,19 +13,18 @@ class splashscreen extends StatefulWidget {
 }
 
 class _splashscreenState extends State<splashscreen> {
-
-
   Future<void> _movetonextscreen() async {
     Future.delayed(const Duration(seconds: 2)).then((value) async {
       await Authcontroller.getAccessToken();
-      if(Authcontroller.isLoggedIn()) {
+      await Authcontroller.getuserData();
+      if (Authcontroller.isLoggedIn()) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => const mainbottomNavBarScrreen(),
           ),
         );
-      }else{
+      } else {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -33,9 +32,7 @@ class _splashscreenState extends State<splashscreen> {
           ),
         );
       }
-    }
-    );
-
+    });
   }
 
   @override

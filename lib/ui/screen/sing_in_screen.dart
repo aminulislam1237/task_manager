@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/models/Login_model.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/service/network_caller.dart';
 import 'package:task_manager/data/utils/urls.dart';
@@ -21,7 +22,7 @@ class _singinscreenState extends State<singinscreen> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final TextEditingController _emailLTEController = TextEditingController();
   final TextEditingController _passwordLTEController = TextEditingController();
-  bool _inprogress =false;
+  bool _inprogress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,7 @@ class _singinscreenState extends State<singinscreen> {
                     height: 24,
                   ),
                   TextButton(
-                    onPressed:_ontapforgetpasswordbotton,
+                    onPressed: _ontapforgetpasswordbotton,
                     child: Text(
                       'Forget Password',
                       style: TextStyle(color: Colors.grey),
@@ -70,40 +71,54 @@ class _singinscreenState extends State<singinscreen> {
       )),
     );
   }
-void _ontapforgetpasswordbotton(){
-Navigator.push(context, MaterialPageRoute(builder: (context)=> const emailvarification(), ),
-);
-}
-void _ontapnextbutton(){
-    if (!_formkey.currentState!.validate()){
+
+  void _ontapforgetpasswordbotton() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const emailvarification(),
+      ),
+    );
+  }
+
+  void _ontapnextbutton() {
+    if (!_formkey.currentState!.validate()) {
       return;
     }
-   _singIn();
-}
-Future<void>_singIn() async{
-    _inprogress =true;
+    _singIn();
+  }
+
+  Future<void> _singIn() async {
+    _inprogress = true;
     setState(() {});
-    Map<String,dynamic>requestBody ={
-      'email':_emailLTEController.text.trim(),
-      'password':_passwordLTEController.text,
+    Map<String, dynamic> requestBody = {
+      'email': _emailLTEController.text.trim(),
+      'password': _passwordLTEController.text,
     };
-    final networkResponse response =await networkcaller.postRequest(url: urls.login,body: requestBody);
-    _inprogress=false;
-    if(response.isSuccess){
-      await Authcontroller.saveAccessToken(response.responseDate['token']);
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> mainbottomNavBarScrreen()), (value)=>false );
-    }else {
+    final networkResponse response =
+        await networkcaller.postRequest(url: urls.login, body: requestBody);
+    _inprogress = false;
+    if (response.isSuccess) {
+      LoginModel loginModel = LoginModel.fromJson(response.responseDate);
+
+      await Authcontroller.saveAccessToken(loginModel.token!);
+      await Authcontroller.saveUserData(loginModel.data!);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => mainbottomNavBarScrreen()),
+          (value) => false);
+    } else {
       Error;
     }
-}
+  }
 
-
-void _ontapsingup(){
-Navigator.push(context, MaterialPageRoute(
-    builder: (context) => const singupscreen(),
-  )
-  );
-}
+  void _ontapsingup() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const singupscreen(),
+        ));
+  }
 
   Widget _buldsingupsection() {
     return RichText(
@@ -116,9 +131,9 @@ Navigator.push(context, MaterialPageRoute(
           text: "Don't have an accoutn?",
           children: [
             TextSpan(
-                text: 'Sing Up', style: TextStyle(color: Appcolors.themecolor),
-            recognizer: TapGestureRecognizer()..onTap =_ontapsingup
-            )
+                text: 'Sing Up',
+                style: TextStyle(color: Appcolors.themecolor),
+                recognizer: TapGestureRecognizer()..onTap = _ontapsingup)
           ]),
     );
   }
@@ -129,34 +144,32 @@ Navigator.push(context, MaterialPageRoute(
       child: Column(
         children: [
           TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            controller: _emailLTEController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(hintText: 'Email'),
-            validator: (String? value){
-              if(value?.isEmpty?? true){
-                return'Enter a valid Email';
-              }
-              return null;
-            }
-          ),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              controller: _emailLTEController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(hintText: 'Email'),
+              validator: (String? value) {
+                if (value?.isEmpty ?? true) {
+                  return 'Enter a valid Email';
+                }
+                return null;
+              }),
           const SizedBox(
             height: 8,
           ),
           TextFormField(
-            controller: _passwordLTEController,
-            obscureText: true,
-            decoration: InputDecoration(hintText: 'Password'),
-              validator: (String? value){
-                if(value?.isEmpty?? true){
-                  return'Enter a your password ';
+              controller: _passwordLTEController,
+              obscureText: true,
+              decoration: InputDecoration(hintText: 'Password'),
+              validator: (String? value) {
+                if (value?.isEmpty ?? true) {
+                  return 'Enter a your password ';
                 }
-                if(value!.length<=6){
+                if (value!.length <= 6) {
                   return 'Enter a password more than 6 charter';
                 }
                 return null;
-              }
-          ),
+              }),
           const SizedBox(
             height: 24,
           ),
@@ -164,7 +177,8 @@ Navigator.push(context, MaterialPageRoute(
             visible: !_inprogress,
             replacement: const CircularProgressIndicator(),
             child: ElevatedButton(
-                onPressed: _ontapnextbutton, child: Icon(Icons.arrow_circle_right_outlined)),
+                onPressed: _ontapnextbutton,
+                child: Icon(Icons.arrow_circle_right_outlined)),
           ),
         ],
       ),

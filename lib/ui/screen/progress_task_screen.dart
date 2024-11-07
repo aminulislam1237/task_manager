@@ -30,17 +30,18 @@ class _progresstaskscreenState extends State<progresstaskscreen> {
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: _getProgressTasklistInProgress,
+      visible: !_getProgressTasklistInProgress,
       replacement: const centercircularprogressindicator(),
       child: RefreshIndicator(
         onRefresh: () async {
           _getProgressTasklist();
         },
         child: ListView.separated(
-          itemCount: 10,
+          itemCount: _ProgressTasklist.length,
           itemBuilder: (context, index) {
-             Taskcard(taskModel:_ProgressTasklist[index],);
-             return null;
+            return Taskcard(taskModel:_ProgressTasklist[index],
+             onRefreshList: _getProgressTasklist,
+             );
           },
           separatorBuilder: (context, index) {
             return const SizedBox(

@@ -19,19 +19,25 @@ class NewTaskScreen extends StatefulWidget {
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
   bool _getNewTasklistInProgress = false;
-  List<TaskModel> _newTasklist =[];
-
+  List<TaskModel> _newTasklist = [];
+  List<TaskModel> _CompletedTasklist = [];
+  List<TaskModel> _CancelledTasklist = [];
+  List<TaskModel> _ProgressTasklist = [];
 
   @override
-void initState(){
-  super.initState();
-  _getnewTasklist();
-}
+  void initState() {
+    super.initState();
+    _getnewTasklist();
+    _getCompletedTasklist();
+    _getcencelledTasklist();
+    _getProgressTasklist();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: ()async{
+        onRefresh: () async {
           _getnewTasklist();
         },
         child: Column(
@@ -42,9 +48,15 @@ void initState(){
                 visible: !_getNewTasklistInProgress,
                 replacement: CircularProgressIndicator(),
                 child: ListView.separated(
-                  itemCount:_newTasklist.length,
+                  itemCount: _newTasklist.length,
                   itemBuilder: (context, index) {
-                    return Taskcard(taskModel: _newTasklist[index],);
+                    return Taskcard(
+                      taskModel: _newTasklist[index],
+                      onRefreshList: _getnewTasklist,
+                      deletetask: () {
+                        _getDeleteTasklist(_newTasklist[index].sId ?? '');
+                      },
+                    );
                   },
                   separatorBuilder: (context, index) {
                     return const SizedBox(
@@ -65,26 +77,26 @@ void initState(){
   }
 
   Widget _buildsummarysection() {
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.all(8.0),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
             summmaryTask(
-              count: 9,
+              count: _newTasklist.length,
               title: 'new',
             ),
             summmaryTask(
-              count: 9,
+              count: _CompletedTasklist.length,
               title: 'completed',
             ),
             summmaryTask(
-              count: 9,
+              count: _CancelledTasklist.length,
               title: 'Canclled',
             ),
             summmaryTask(
-              count: 9,
+              count: _ProgressTasklist.length,
               title: 'Progress',
             ),
           ],
@@ -94,15 +106,15 @@ void initState(){
   }
 
   Future<void> _ontapAddFab() async {
-   final bool?shouldRefresh = await Navigator.push(
+    final bool? shouldRefresh = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const addnewtask(),
       ),
     );
-   if(shouldRefresh==true){
-     _getnewTasklist();
-   }
+    if (shouldRefresh == true) {
+      _getnewTasklist();
+    }
   }
 
   Future<void> _getnewTasklist() async {
@@ -111,13 +123,71 @@ void initState(){
     setState(() {});
     final networkResponse response =
         await networkcaller.getRequest(url: urls.newtasklist);
-    if(response.isSuccess){
-    final TaskListModel taskListModel = TaskListModel.fromJson(response.responseDate);
-    _newTasklist= taskListModel.tasklist??[];
-    }else{
-      showsnackBarMessage(context, response.errormassage,true);
+    if (response.isSuccess) {
+      final TaskListModel taskListModel =
+          TaskListModel.fromJson(response.responseDate);
+      _newTasklist = taskListModel.tasklist ?? [];
+    } else {
+      showsnackBarMessage(context, response.errormassage, true);
     }
     _getNewTasklistInProgress = false;
+    setState(() {});
+  }
+
+  Future<void> _getCompletedTasklist() async {
+    _CompletedTasklist.clear();
+    setState(() {});
+    final networkResponse response =
+        await networkcaller.getRequest(url: urls.completedtasklist);
+    if (response.isSuccess) {
+      final TaskListModel taskListModel =
+          TaskListModel.fromJson(response.responseDate);
+      _CompletedTasklist = taskListModel.tasklist ?? [];
+    } else {
+      showsnackBarMessage(context, response.errormassage, true);
+    }
+    setState(() {});
+  }
+
+  Future<void> _getcencelledTasklist() async {
+    _CancelledTasklist.clear();
+    setState(() {});
+    final networkResponse response =
+        await networkcaller.getRequest(url: urls.cancelledtasklist);
+    if (response.isSuccess) {
+      final TaskListModel taskListModel =
+          TaskListModel.fromJson(response.responseDate);
+      _CancelledTasklist = taskListModel.tasklist ?? [];
+    } else {
+      showsnackBarMessage(context, response.errormassage, true);
+    }
+    setState(() {});
+  }
+
+  Future<void> _getProgressTasklist() async {
+    _ProgressTasklist.clear();
+    setState(() {});
+    final networkResponse response =
+        await networkcaller.getRequest(url: urls.progresstasklist);
+    if (response.isSuccess) {
+      final TaskListModel taskListModel =
+          TaskListModel.fromJson(response.responseDate);
+      _ProgressTasklist = taskListModel.tasklist ?? [];
+    } else {
+      showsnackBarMessage(context, response.errormassage, true);
+    }
+    setState(() {});
+  }
+
+  Future<void> _getDeleteTasklist(String taskID) async {
+    setState(() {});
+    final networkResponse response =
+        await networkcaller.getRequest(url: urls.DeleteTasklist + "/$taskID");
+    if (response.isSuccess) {
+      _getnewTasklist();
+    } else {
+      showsnackBarMessage(context, response.errormassage, true);
+    }
     setState(() {});
   }
 }
