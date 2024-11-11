@@ -51,7 +51,7 @@ class _profilescreenState extends State<profilescreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Form(
-            key : _formkey,
+            key: _formkey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -76,8 +76,9 @@ class _profilescreenState extends State<profilescreen> {
                   enabled: false,
                   controller: _eamilTEcontroller,
                   decoration: const InputDecoration(hintText: 'Email'),
-                  validator: (String?value){
-                    if (value?.trim().isEmpty ?? true) return 'Email is required';
+                  validator: (String? value) {
+                    if (value?.trim().isEmpty ?? true)
+                      return 'Email is required';
                     return null;
                   },
                 ),
@@ -87,8 +88,9 @@ class _profilescreenState extends State<profilescreen> {
                 TextFormField(
                   controller: _firstNameTEController,
                   decoration: const InputDecoration(hintText: 'First Name'),
-                  validator: (String?value){
-                    if (value?.trim().isEmpty ?? true) return 'First Name is required';
+                  validator: (String? value) {
+                    if (value?.trim().isEmpty ?? true)
+                      return 'First Name is required';
                     return null;
                   },
                 ),
@@ -98,8 +100,9 @@ class _profilescreenState extends State<profilescreen> {
                 TextFormField(
                   controller: _lastNameTEController,
                   decoration: const InputDecoration(hintText: 'Last Name'),
-                  validator: (String?value){
-                    if (value?.trim().isEmpty ?? true) return 'Last Name is required';
+                  validator: (String? value) {
+                    if (value?.trim().isEmpty ?? true)
+                      return 'Last Name is required';
                     return null;
                   },
                 ),
@@ -109,8 +112,9 @@ class _profilescreenState extends State<profilescreen> {
                 TextFormField(
                   controller: _phoneTEController,
                   decoration: const InputDecoration(hintText: 'Phone Number'),
-                  validator: (String?value){
-                    if (value?.trim().isEmpty ?? true) return 'Phone Number is required';
+                  validator: (String? value) {
+                    if (value?.trim().isEmpty ?? true)
+                      return 'Phone Number is required';
                     return null;
                   },
                 ),
@@ -131,9 +135,8 @@ class _profilescreenState extends State<profilescreen> {
                   replacement: const CircularProgressIndicator(),
                   child: ElevatedButton(
                       onPressed: () {
-                        if (_formkey.currentState!.validate()){
+                        if (_formkey.currentState!.validate()) {
                           _updateProfile();
-
                         }
                       },
                       child: Icon(Icons.arrow_circle_right_outlined)),
@@ -145,38 +148,35 @@ class _profilescreenState extends State<profilescreen> {
       ),
     );
   }
-  
-  Future<void> _updateProfile() async{
+
+  Future<void> _updateProfile() async {
     _updateProfileInprogress = true;
     setState(() {});
-    Map< String, dynamic> requestBody ={
+    Map<String, dynamic> requestBody = {
       'email': _eamilTEcontroller.text.trim(),
       'firstName': _firstNameTEController.text.trim(),
       'lastName': _lastNameTEController.text.trim(),
-     'mobile': _phoneTEController.text.trim(),
+      'mobile': _phoneTEController.text.trim(),
     };
-    if(_passwordTEController.text.isNotEmpty){
-      requestBody ['password'] = _passwordTEController.text;
+    if (_passwordTEController.text.isNotEmpty) {
+      requestBody['password'] = _passwordTEController.text;
     }
-    if(_selectedImage != null){
+    if (_selectedImage != null) {
       List<int> imageBytes = await _selectedImage!.readAsBytes();
       String convertedImage = base64Encode(imageBytes);
-      requestBody ['Photo'] = convertedImage;
+      requestBody['Photo'] = convertedImage;
     }
-    final networkResponse response = await networkcaller .postRequest(
-        url: urls.UpdateProfile,
-    body: requestBody);
+    final networkResponse response = await networkcaller.postRequest(
+        url: urls.UpdateProfile, body: requestBody);
     _updateProfileInprogress = false;
     setState(() {});
-    if (response.isSuccess){
+    if (response.isSuccess) {
       UserModel userModel = UserModel.fromJson(requestBody);
       Authcontroller.saveUserData(userModel);
       showsnackBarMessage(context, 'Profile has been updated!');
-    }else{
+    } else {
       showsnackBarMessage(context, response.errormassage);
     }
-
-    
   }
 
   Widget _buildphotopicker() {
@@ -210,31 +210,28 @@ class _profilescreenState extends State<profilescreen> {
             const SizedBox(
               width: 8,
             ),
-             Text(_getSelectedPhotoTitle()),
+            Text(_getSelectedPhotoTitle()),
           ],
         ),
       ),
     );
   }
-String _getSelectedPhotoTitle(){
-    if(_selectedImage != null){
+
+  String _getSelectedPhotoTitle() {
+    if (_selectedImage != null) {
       return _selectedImage!.name;
     }
-    return'Selected photo';
-}
-  
-  
-  
-  
-  Future<void> _pickImage() async{
+    return 'Selected photo';
+  }
+
+  Future<void> _pickImage() async {
     ImagePicker _imagePicker = ImagePicker();
 
-    XFile? pickImage = await _imagePicker.pickImage(source: ImageSource.gallery);
-    if(pickImage!=null){
+    XFile? pickImage =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
+    if (pickImage != null) {
       _selectedImage = pickImage;
       setState(() {});
     }
-
   }
 }
-

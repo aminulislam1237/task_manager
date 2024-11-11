@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/service/network_caller.dart';
 import 'package:task_manager/data/utils/urls.dart';
-import 'package:task_manager/ui/screen/main_bottom_nav_bar_screeen.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
 import 'package:task_manager/ui/widgets/cente_circular_progress_indicator.dart';
 import 'package:task_manager/ui/widgets/screen_background.dart';

@@ -76,7 +76,7 @@ class _singinscreenState extends State<singinscreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const emailvarification(),
+        builder: (context) => const EmailVerification(),
       ),
     );
   }

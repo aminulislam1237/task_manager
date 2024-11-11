@@ -8,6 +8,9 @@ class urls{
   static const String cancelledtasklist = '$_baseurl/listTaskByStatus/Cancelled';
   static const String progresstasklist = '$_baseurl/listTaskByStatus/Progress';
   static const String UpdateProfile = '$_baseurl/ProfileUpdate';
+  static const String RecoverVerifyOtp = '$_baseurl/RecoverVerifyOtp';
+  static const String RecoverVerifyEmail = '$_baseurl/RecoverVerifyEmail';
+  static const String RecoverResetPassword = '$_baseurl/RecoverResetPassword';
   static const String DeleteTasklist = '$_baseurl/deleteTask';
   static String changeStatus(String taskId, String status) =>
       '$_baseurl/updateTaskStatus/$taskId/$status';
