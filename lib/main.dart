@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -11,10 +10,8 @@ import 'package:task_manager/setting_screen.dart';
 void main() {
   runApp(const CounterApp());
 }
-
 class CounterApp extends StatelessWidget {
   const CounterApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
