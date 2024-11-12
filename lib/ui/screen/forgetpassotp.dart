@@ -80,7 +80,7 @@ class _ForgetPassOtpState extends State<ForgetPassOtp> {
         // Handle successful OTP verification
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ResetPasswordScreen()),
+          MaterialPageRoute(builder: (context) => ResetPasswordScreen(email: widget.email??"",otp: otp,)),
         );
       } else {
         // Handle error response

@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:task_manager/data/utils/urls.dart';
 import 'dart:convert'; // For jsonEncode
-import 'package:task_manager/ui/screen/forgetpassotp.dart';
 import 'package:task_manager/ui/screen/singupsreen.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
 import 'package:task_manager/ui/widgets/screen_background.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({super.key});
+  final String email;
+  final String otp;
+  const ResetPasswordScreen({super.key, required this.email, required this.otp});
+
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _otpController = TextEditingController();
   final TextEditingController _newpasswordController = TextEditingController();
   final TextEditingController _comfrimedpasswordController = TextEditingController();
 
@@ -34,11 +34,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     }
 
     final Map<String, dynamic> body = {
-      'email': _emailController.text,
-      'otp': _otpController.text,
+      'email': widget.email,
+      'OTP': widget.otp,
       'password': _newpasswordController.text,
     };
-
+print(body);
     try {
       final response = await http.post(
         Uri.parse(urls.RecoverResetPassword),
@@ -50,7 +50,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         // Handle successful response
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ForgetPassOtp()),
+          MaterialPageRoute(builder: (context) => singupscreen()),
         );
       } else {
         // Handle error response
